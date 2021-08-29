@@ -6,12 +6,17 @@ import { useEffect, useState } from 'react';
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [httpError, setHttpError] = useState(null);
 
   useEffect(() => {
     const fetchMeals = async() => {
       const response = await fetch('https://react-food-order-app-udemy-default-rtdb.asia-southeast1.firebasedatabase.app/meals.json');
-      const responseData = await response.json();
 
+      if (!response.ok) {
+        throw new Error('Something went wrong!');
+      }
+
+      const responseData = await response.json();
       const loadedMeals = [];
 
       for (const key in responseData) {
@@ -27,13 +32,24 @@ const AvailableMeals = () => {
       setIsLoading(false);
     };
 
-    fetchMeals();
+    fetchMeals().catch((error) => {
+      setIsLoading(false);
+      setHttpError(error.message);
+    });
   }, []);
 
   if (isLoading) {
     return (
       <section className={classes.MealsLoading}>
         <p>Loading...</p>
+      </section>
+    );
+  }
+
+  if (httpError) {
+    return (
+      <section className={classes.MealsError}>
+        <p>{httpError}</p>
       </section>
     );
   }
