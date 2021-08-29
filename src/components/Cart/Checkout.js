@@ -42,6 +42,13 @@ const Checkout = props => {
     if (!formIsValid) {
       return;
     }
+
+    props.onConfirm({
+      name: enteredName,
+      street: enteredStreet,
+      city: enteredCity,
+      postalCode: enteredPostalCode
+    });
   };
 
   const nameControlClasses = `${classes.control} ${
@@ -63,12 +70,12 @@ const Checkout = props => {
   return (
     <form onSubmit={confirmHandler}>
       <div className={nameControlClasses}>
-        <label htmlFor='name'>Your Name</label>
+        <label htmlFor='name'>Name</label>
         <input type='text' id='name' ref={nameInputRef} />
         {!formInputsValidity.name && <p>Please enter a valid name!</p>}
       </div>
       <div className={streetControlClasses}>
-        <label htmlFor='street'>Your Name</label>
+        <label htmlFor='street'>Street</label>
         <input type='text' id='street' ref={streetInputRef} />
         {!formInputsValidity.street && <p>Please enter a valid street!</p>}
       </div>
